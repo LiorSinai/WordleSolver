@@ -26,7 +26,10 @@ for (idx0, guess) in enumerate(ranks[1:100])
         if idx % 100 == 0
             print(".")
         end
-        wins[idx], moves[idx] = play_game(words, word, verbose=false, candidate=guess[1], num_moves=20, min_guess=2)
+        wins[idx], moves[idx] = play_game(
+            words, word, nothing, verbose=false, 
+            candidate=guess[1], num_moves=20, min_guess=2
+            )
     end
     print("\n")
 

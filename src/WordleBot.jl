@@ -14,8 +14,9 @@ export play_game, interpret!
 
 include("wordle.jl")
 include("solver.jl")
+include("base3.jl")
 
-function play_game(words, solution::String; 
+function play_game(words, solution::String, responses::Union{Matrix, Nothing}; 
     num_moves=6, 
     candidate="slate", 
     verbose=true,
@@ -53,7 +54,7 @@ function play_game(words, solution::String;
             #weights = get_frequencies_position(candidates, clue)
             #scores = score_frequency_position(candidates, clue, weights)
             #scores = score_new(words, candidates, clue, wrongpos)
-            scores = score_entropy(words, candidates)
+            scores = score_entropy(words, candidates, responses)
             candidate = minimum(x->(-x[2], x[1]), scores)[2]
         end
     end

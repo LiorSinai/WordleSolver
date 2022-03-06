@@ -115,6 +115,35 @@ function score_entropy(words, candidates)
     scores
 end
 
+function entropy_matrix(words)
+    n = length(words)
+    responses = zeros(Int, n, n)
+    for (i, candidate) in enumerate(words)
+        for (j, solution) in enumerate(words)
+            responses[i, j] = encode_base3(verify(candidate, solution))
+        end
+    end
+    responses
+end
+
+function score_entropy(words, candidates, responses::Matrix)
+    buckets = zeros(length(words), 3^5)
+    for i in 1:size(responses, 1)
+        for j in 1:size(responses, 2)
+            if words[j] in candidates
+                r = responses[i, j]
+                buckets[i, r + 1] += 1
+            end
+        end
+    end
+    probs = buckets ./ size(responses, 2)
+    entropies = -probs .* log2.(probs)
+    entropies[isnan.(entropies)] .= 0
+    scores = sum(entropies, dims=2)
+    [(words[i], scores[i]) for i in 1:length(words)]
+end
+
+
 """
     get_frequencies(words, clue)
 
